@@ -1,0 +1,88 @@
+<html>
+    <head>
+        <style>
+            body {
+                font-family:"Poppins";
+
+                width: 300px;
+                height: 175px;
+                background-color: wheat;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+
+                text-align: center;
+                font-size: 15px;
+            }
+
+            button {
+                font-family:"Poppins";
+
+                background-color: #001945;
+                color: wheat;
+                transition: 0.3s;
+
+                border: none;
+                border-radius: 15px;
+                padding: 20px;
+            }
+
+            button:hover {
+                background-color: #001945;
+                color: wheat;
+            }
+
+            #clear {
+                position: fixed;
+
+                width: 40px;
+                height: 40px;
+
+                right: 10px;
+                bottom: 10px;
+
+                background-image: url("images/signout.png");
+                background-size: cover;
+
+                background-color: transparent;
+            }
+
+            #title {
+                position: fixed;
+
+                left: 0;
+                right: 0;
+                top: 0;
+                
+                padding: 10px;
+
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+
+                font-size: 20px;
+            }
+
+            #title img {
+                width: 35px;
+                height: 35px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="title">
+            <div style="font-weight: 800;"> 
+                Quizlet to Lang
+            </div>
+            <img src="icons/128x128.png">
+        </div>
+        <button id="exportButton" style="display: none;">Send to Lang</button>
+        <div id="notQuizlet" style="display: none;">Open a studyset on Quizlet!</div>
+        <button id="signinButton" style="display: none;">Sign in to Lang</button>
+        <button id="clear"></button>
+    </body>
+    <script src="scripts/popup.js"></script>
+</html>
