@@ -11,7 +11,7 @@ Disadvantages
 
 ### Installation Instructions
 To install the extension, it's available on the chrome web store <a href='https://chrome.google.com/webstore/detail/quizlet-to-langstudy/ckmfofefmcaieajjkelnakglpkkmeomd/related'>here</a>
-If you need it right now or want the latest version, follow these steps
+If for some reason you want to compile it yourself:
 1) Clone or download this repository to a folder
 2) Visit chrome://extensions
 3) Click "Load unpacked"
