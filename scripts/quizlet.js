@@ -26,7 +26,8 @@ function get_quizlet() {
 
     const title = doc.querySelector('.SetPage-setTitle').querySelector('h1').textContent.trim();
 
-    const contents = doc.querySelectorAll('.SetPageTerm-content');
+    // const contents = doc.querySelectorAll('.SetPageTerm-content');
+    const contents = doc.querySelectorAll('.s1etjelq');
     const entries = [];
 
     contents.forEach(content => {
