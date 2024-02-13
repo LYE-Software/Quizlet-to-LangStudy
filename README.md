@@ -10,8 +10,8 @@ Disadvantages
 - You need to be using a Chromium-based browser
 
 ### Installation Instructions
-To install the extension, it's available on the chrome web store here (coming soon)
-If you need it right now or want the latest version, follow these steps
+To install the extension, it's available on the chrome web store <a href='https://chrome.google.com/webstore/detail/quizlet-to-langstudy/ckmfofefmcaieajjkelnakglpkkmeomd/related'>here</a>, but
+if for some reason you want to compile it yourself:
 1) Clone or download this repository to a folder
 2) Visit chrome://extensions
 3) Click "Load unpacked"
