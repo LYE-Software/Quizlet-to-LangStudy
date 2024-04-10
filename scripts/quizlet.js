@@ -78,7 +78,7 @@ function get_quizlet() {
 
 function addslashes( str ) {
     // return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
-    return str.replaceAll("\"", "\\\"").replaceAll("\'", "\\\'").replaceAll("\n", " ");
+    return str.replaceAll("\"", "\\\"").replaceAll("\n", " ");
 }
 
 var uploading = false;
