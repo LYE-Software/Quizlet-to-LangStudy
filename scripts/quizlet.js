@@ -1,65 +1,84 @@
-function get_page() {
-    return document.documentElement.innerHTML;
-}
-
 function get_quizlet() {
-    const page = get_page();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(page, 'text/html');
-
-    const container = doc.querySelector('.SetPage');
-    if (!container) {
-        const error = doc.querySelector('.c1u0rqik');
-        if (!error) {
-            console.error('Unexpected structure');
-            return;
+    let divs = document.getElementsByTagName("div");
+    let possible_divs = []
+    for (div of divs) {
+        let width = div.getBoundingClientRect().width;
+        let height = div.getBoundingClientRect().height;
+        if (width > 200 && width / height > 3) {
+            possible_divs.push(div);
         }
-        const error_header = error.querySelector('h2').textContent.trim();
-        const quizlet_error = error.querySelectorAll('.UIParagraph')[0].textContent.trim();
-        if (error_header === "This study set is private") {
-            console.error('Private set:', quizlet_error);
-        } else {
-            console.error('Unknown Quizlet error:', quizlet_error);
-        }
-        return;
     }
 
-    const title = doc.querySelector('.SetPage-setTitle').querySelector('h1').textContent.trim();
+    console.log("Found " + possible_divs.length + " possible term/definition divs.");
+    console.log(possible_divs[0])
+    let parent_usage_count = new Map()
+    for (div of possible_divs) {
+        let parent = div.parentElement;
+        if (parent_usage_count.has(parent)) {
+            parent_usage_count.set(parent, parent_usage_count.get(parent) + 1);
+        } else {
+            parent_usage_count.set(parent, 1);
+        }
+    }
 
-    // const contents = doc.querySelectorAll('.SetPageTerm-content');
-    const contents = doc.querySelectorAll('.s1etjelq');
-    const entries = [];
+    console.log("Collected parent element usage counts.");
 
-    contents.forEach(content => {
-        const term = content.childNodes[0].textContent;
-        const definition = content.childNodes[1].textContent;
-        entries.push([term, definition]);
-    });
+    let max_parent = null;
+    for (parent of parent_usage_count.keys()) {
+        if (max_parent == null || parent_usage_count.get(parent) > parent_usage_count.get(max_parent) && parent.getBoundingClientRect().height > 400) {
+            max_parent = parent;
+        }
+    }
 
-    const output = {
-        "name": title,
-        "terms": [],
-    };
+    console.log("Located the term/def container with " + parent_usage_count.get(max_parent) + " children.");
+    console.log(max_parent)
 
-    entries.forEach(entry => {
-        const term = {
-            "isMulti": false,
-            "term": addslashes(entry[0]),
-            "answer": addslashes(entry[1]),
-            "hasImage": false,
-            "trainId": null,
-        };
-        output["terms"].push(term);
-    });
+    output = {
+        name: document.title,
+        terms: [],
+        length: 0
+    }
 
-    output["length"] = output["terms"].length;
-    console.log(output);
+    let term_defs = max_parent.children;
+    
+    for (let x = 0; x < term_defs.length; x++) {
+        let term_def = term_defs[x];
+        if (term_def.getElementsByTagName("iframe").length > 0) {
+            continue;
+        }
+        let children = []
+        try {
+            while (true) {
+                children = term_def.children;
+                if (children.length > 1) {
+                    if (children[0].innerText != "" && children[1].innerText != "") {
+                        break;
+                    }
+                }
+                term_def = children[0];
+            }
+
+            term_json = {
+                isMulti: false,
+                term: addslashes(children[0].innerText),
+                answer: addslashes(children[1].innerText),
+                hasImage: false,
+                trainId: null,
+            }
+            console.log(term_json)
+            output.terms.push(term_json);
+        } catch (e) {
+            console.log("Failed to parse term/def.");
+        }
+    }
+
+    output.length = output.terms.length;
     return output;
 }
 
 function addslashes( str ) {
     // return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
-    return str.replaceAll("\"", "\\\"");
+    return str.replaceAll("\"", "\\\"").replaceAll("\'", "\\\'").replaceAll("\n", " ");
 }
 
 var uploading = false;
@@ -114,7 +133,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
                 }
             }
             console.log("Sending: " + JSON.stringify(studysheet));
-            xhr.send(JSON.stringify(studysheet));
+            xhr.send(JSON.stringify(studysheet))
         });
     }
 });
