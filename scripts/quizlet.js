@@ -78,7 +78,9 @@
 
 function get_quizlet() {
     let terms = document.querySelectorAll(".SetPageTerms-term");
-    console.log("Found " + terms.length + " terms.");
+    if (terms.length == 0) {
+        return {"error": "cannot_be_imported"};
+    }
     studysheet = {
         "title": document.title,
         "terms": [],
@@ -95,18 +97,10 @@ function get_quizlet() {
     return studysheet;
 }
 
-var uploading = false;
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.action === "scrapeQuizlet") {
-        if (uploading) {
-            return;
-        }
-        console.log("Scraping Quizlet...");
-
         var studysheet = get_quizlet()
-        chrome.storage.sync.set({ "studysheet_in_contention": studysheet });
-        
-        console.log("[DEBUG] VISIT LANG IMPORT PAGE");
+        sendResponse(studysheet);
     }
 });
