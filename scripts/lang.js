@@ -1,17 +1,18 @@
-console.log(window.location.href);
 
-var url = new URL(window.location.href);
-var session = url.searchParams.get("session");
+chrome.storage.sync.get("studysheet_in_contention", function (data) {
+    let ssContainer = document.getElementById("studysheet-container");
+    let infoPanel = document.getElementById("left-panel");
+    if (Object.keys(data).length == 0) {
+        setTimeout(() => {
+            ssContainer.innerHTML = `<h2 style="font-family: Poppins; padding: 50px;" >You haven't selected a Quizlet Studyset yet. Go to Quizlet and use the browser extension to select a studyset.</h2>`
+            infoPanel.style.width = "0";
+            infoPanel.style.flex = "0 0 0";
+            infoPanel.style.opacity = "0";
+            infoPanel.parentElement.style.gap = "0";
+        }, 500);
+        return;
+    }
 
-if (session) {
-    console.log("Session ID: " + session + ". Saving...");
-    chrome.storage.sync.set({ "session_id": session });
-    chrome.storage.sync.get("signing_in", function (data) {
-        if (data.signing_in) {
-            alert("Successfully signed in! You can close this tab and export your Quizlet sets.");
-            chrome.storage.sync.set({ "signing_in": false });
-        }
-    });
-} else {
-    console.log("No session ID found.");
-}
+    const event = new CustomEvent('loadImportedSheet', { detail: { studysheet: data.studysheet_in_contention } });
+    document.dispatchEvent(event);
+});

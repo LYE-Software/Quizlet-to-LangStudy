@@ -15,7 +15,8 @@
         {
             "js": ["scripts/lang.js"],
             "matches": [
-                "https://langstudy.tech/*"
+                "https://langstudy.tech/import",
+                "http://127.0.0.1:8082/import"
             ]
         }
     ],
