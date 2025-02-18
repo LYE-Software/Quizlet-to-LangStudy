@@ -41,11 +41,14 @@ document.addEventListener("DOMContentLoaded", function () {
     let sendToLangButton = document.getElementById("exportButton");
     sendToLangButton.addEventListener("click", function () {
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, { action: "scrapeQuizlet" }, function (response) {
-                chrome.storage.sync.set({ "studysheet_in_contention": response }, function () {
-                    // chrome.tabs.create({ url: "https://langstudy.tech/import" });
+            for (let tab of tabs) {
+                chrome.tabs.sendMessage(tab.id, { action: "scrapeQuizlet" }, function (response) {
+                    console.log(response)
+                    chrome.storage.sync.set({ "studysheet_in_contention": response }, function () {
+                        // chrome.tabs.create({ url: "https://langstudy.tech/import" });
+                    });
                 });
-            });
+            }
         });
     });
 });

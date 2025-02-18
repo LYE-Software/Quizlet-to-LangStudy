@@ -79,7 +79,11 @@
 function get_quizlet() {
     let terms = document.querySelectorAll(".SetPageTerms-term");
     if (terms.length == 0) {
-        return {"error": "cannot_be_imported"};
+        terms = document.querySelectorAll(".SetPageTermsList-term")
+        if (terms.length == 0) {
+            return {"error": "cannot_be_imported"};
+        }
+
     }
     studysheet = {
         "title": document.title,
